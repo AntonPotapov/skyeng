@@ -14,7 +14,14 @@ use src\Integration\DataProvider;
  */
 class DecoratorManager extends DataProvider
 {
+    /**
+     * @var CacheItemPoolInterface
+     */
     public $cache;
+
+    /**
+     * @var LoggerInterface
+     */
     public $logger;
 
     /**
@@ -24,7 +31,7 @@ class DecoratorManager extends DataProvider
      * @param CacheItemPoolInterface $cache
      * @param LoggerInterface        $logger
      */
-    public function __construct($host, $user, $password, CacheItemPoolInterface $cache, LoggerInterface $logger)
+    public function __construct(string $host, string $user, string $password, CacheItemPoolInterface $cache, LoggerInterface $logger)
     {
         parent::__construct($host, $user, $password);
         $this->cache = $cache;
@@ -35,7 +42,7 @@ class DecoratorManager extends DataProvider
      * @param array $input
      * @return array
      */
-    public function getResponse(array $input)
+    public function getResponse(array $input): array
     {
         try {
             $cacheKey = $this->getCacheKey($input);
@@ -54,7 +61,7 @@ class DecoratorManager extends DataProvider
 
             return $result;
         } catch (Exception $e) {
-            $this->logger->critical('Error');
+            $this->logger->critical('Error: ' . $e->getMessage());
         }
 
         return [];
@@ -64,7 +71,7 @@ class DecoratorManager extends DataProvider
      * @param array $input
      * @return string
      */
-    public function getCacheKey(array $input)
+    public function getCacheKey(array $input): string
     {
         return json_encode($input);
     }
